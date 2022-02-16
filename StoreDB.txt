@@ -1,0 +1,206 @@
+CREATE DATABASE StoreDB;
+USE StoreDB;
+
+CREATE TABLE customers (
+user_id int NOT NULL AUTO_INCREMENT,
+first_name varchar(255) NOT NULL,
+surname varchar(255) NOT NULL,
+house_number int NOT NULL,
+postcode varchar(8) NOT NULL,
+email varchar(255) NOT NULL,
+password varchar(255) NOT NULL,
+PRIMARY KEY (user_id)
+);
+
+CREATE TABLE orders (
+order_id int NOT NULL AUTO_INCREMENT,
+fk_user_id int NOT NULL,
+total dec(5,2) NOT NULL,
+PRIMARY KEY (order_id),
+FOREIGN KEY (fk_user_id) REFERENCES customers (user_id)
+);
+
+CREATE TABLE products (
+product_id int NOT NULL AUTO_INCREMENT,
+name varchar(100) NOT NULL,
+description varchar(100) NOT NULL,
+cost decimal(5,2) NOT NULL,
+quantity int NOT NULL,
+PRIMARY KEY (product_id)
+);
+
+CREATE TABLE orderline (
+orderline_id int NOT NULL AUTO_INCREMENT,
+fk_product_id int NOT NULL,
+fk_order_id int NOT NULL,
+PRIMARY KEY (orderline_id),
+FOREIGN KEY (fk_product_id) REFERENCES products (product_id),
+FOREIGN KEY (fk_order_id) REFERENCES orders (order_id)
+);
+
+INSERT INTO customers (first_name, surname, house_number, postcode, email, password)
+VALUES ("Chris", "Savage", 75, "Wa37NY", "chris.sav@outlookl.com", "********"), ("Gavin", "Free", 82, "FF36C47", "gavin.free@gmail.com", "********"), ("Andrew", "Panton", 42, "FF54E79", "andrew.panton@gmail.com", "********"), ("Geoff", "Ramsey", 64, "FF91H78", "geoff.ramsey@gmail.com", "********"), ("Eric", "Baudour", 12, "FF14C87", "eric.baudour@gmail.com", "********");
+
+SELECT *
+FROM customers;
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE customers
+SET first_name = "Nick"
+WHERE first_name = "Chris";
+
+UPDATE customers
+SET surname = "Schwartz"
+WHERE surname = "Savage";
+
+UPDATE customers
+SET email = "nick.schwartz@gmail.com"
+WHERE email = "chris.sav@outlookl.com";
+
+UPDATE customers
+SET postcode = "FF67T58"
+WHERE postcode = "Wa37NY";
+
+UPDATE customers
+SET house_number = "56"
+WHERE house_number = "75";
+
+INSERT INTO orders (fk_user_id, total)
+VALUES (1,56.99), (2, 32.86), (3, 22.99), (4, 11.12), (5, 992.99);
+
+UPDATE orders
+SET total = 23.98
+WHERE total = 22.99;
+
+UPDATE orders
+SET total = 11.99
+WHERE total = 11.12;
+
+UPDATE orders
+SET fk_user_id = 5
+WHERE order_id = 2;
+
+UPDATE orders
+SET fk_user_id = 3
+WHERE order_id = 1;
+
+SELECT *
+FROM orders;
+
+ALTER TABLE products
+DROP COLUMN quantity;
+
+INSERT INTO Products (name, description, cost)
+VALUES ("PS5", "Playstation 5", 592.00), ("PS5 Controller", "Controller for the Playstation 5", 56.99), ("Controller Stand", "Stand for Controllers", 11.99), ("Xbox Series X", "New Xbox Series X", 399.99), ("Series X Controller", "Controller for the Xbox Series X", 33.99);
+
+SELECT *
+FROM products;
+
+INSERT INTO orderline (fk_order_id, fk_product_id)
+VALUES (1, 2), (2, 5), (3, 3), (3, 3), (4,3), (5,1), (5,4);
+
+SELECT *
+FROM orderline;
+
+UPDATE products
+SET description = "The Brand New Playstation 5"
+WHERE description = "Playstation 5";
+
+UPDATE products
+SET name = "Xbox S X"
+WHERE name = "Xbox Series X";
+
+UPDATE orderline
+SET fk_order_id = "4"
+WHERE orderline_id = "6";
+
+UPDATE orders
+SET total = 45.98
+WHERE order_id = 2;
+
+UPDATE orders
+SET total = 11.99
+WHERE order_id = 3;
+
+UPDATE orders
+SET total = 603.99
+WHERE order_id = 4;
+
+UPDATE orders
+SET total = 399.99
+WHERE order_id = 5;
+
+SELECT Name
+FROM products
+ORDER BY cost DESC
+;
+
+SELECT Name
+FROM products
+ORDER BY cost ASC
+;
+
+SELECT c.first_name, c.surname, p.name, p.description, p.cost, o.total
+FROM orderline ol
+JOIN products p 
+ON p.product_id = ol.fk_product_id
+JOIN orders o 
+ON o.order_id = ol.fk_order_id
+JOIN customers c
+ON c.user_id = o.fk_user_id
+ORDER BY user_id ASC
+;
+
+Select o.total
+FROM orders o 
+JOIN customers c 
+ON c.user_id = fk_user_id
+WHERE c.first_name = "NICK"
+;
+
+Select c.first_name, c.surname, o.total
+FROM orders o 
+JOIN customers c 
+ON c.user_id = fk_user_id
+WHERE c.first_name = "Gavin"
+;
+
+INSERT INTO customers (first_name, surname, house_number, postcode, email, password)
+VALUES ("Michael", "Jones", 74, "FJ457TJ", "michael,jones@gmail.com", "*******");
+
+INSERT INTO orders (fk_user_id, total)
+VALUES (6, 999.99);
+
+INSERT INTO Products (name, description, cost)
+VALUES ("RTX 3080TI", "Nvidea RTX 3080TI Graphics Card", 999.99);
+
+INSERT INTO orderline (fk_order_id, fk_product_id)
+VALUES (6,6);
+
+SET FOREIGN_KEY_CHECKS=0;
+
+DELETE FROM customers
+WHERE user_id = 6;
+
+DELETE FROM orders
+WHERE order_id = 6;
+
+DELETE FROM products
+WHERE product_id = 6;
+
+DELETE FROM orderline
+WHERE orderline_id = 6;
+
+SET FOREIGN_KEY_CHECKS=1;
+
+CREATE TABLE reviews (
+review_id int NOT NULL AUTO_INCREMENT,
+fk_product_id int NOT NUll,
+review varchar(255) NOT NULL,
+rating int NOT NULL,
+PRIMARY KEY (review_id),
+FOREIGN KEY (fk_product_id) REFERENCES products (product_id)
+);
+ 
+
