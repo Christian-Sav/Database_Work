@@ -1,0 +1,115 @@
+USE Sakila;
+
+#TASK_1 List all actors.
+SELECT *
+FROM actor;
+
+#TASK_2 Find the surname of the actor with the forename 'John'.
+SELECT last_name
+FROM actor
+WHERE first_name = "John";
+
+#TASK_3 Find all actors with surname 'Neeson'.
+SELECT first_name, last_name
+FROM actor
+WHERE last_name = "Neeson";
+
+#TASK_4 Find all actors with ID numbers divisible by 10.
+SELECT first_name, last_name
+FROM actor
+WHERE actor_id % 10 = 0
+;
+
+#TASK_5 What is the description of the movie with an ID of 100?
+SELECT title, description
+FROM film
+WHERE film_id = 100
+;
+
+#TASK_6 Find every R-rated movie.
+SELECT title
+FROM film
+WHERE rating = "R"
+;
+
+#TASK_7 Find every non-R-rated movie.
+SELECT title
+FROM film
+WHERE rating != "R"
+;
+
+#TASK_8 Find the ten shortest movies.
+SELECT title, length
+FROM film
+ORDER BY length ASC
+limit 10
+;
+
+#TASK_9 Find the movies with the longest runtime, without using LIMIT.
+
+SELECT title, length
+FROM film
+WHERE length = (
+select MAX(length)
+FROM film
+ORDER BY length DESC
+);
+
+#TASK_10 Find all movies that have deleted scenes.
+Select title, special_features
+From film
+WHERE special_features LIKE "%Deleted Scenes%"
+;
+
+#TASK_11 Using HAVING, reverse-alphabetically list the last names that are not repeated.
+SELECT Last_name
+FROM actor
+GROUP BY last_name
+HAVING COUNT(last_name) = 1
+ORDER BY last_name DESC
+;
+
+#TASK_12 Using HAVING, list the last names that appear more than once, from highest to lowest frequency.
+SELECT Last_name
+FROM actor
+GROUP BY last_name
+HAVING COUNT(last_name) >1
+ORDER BY COUNT(last_name) DESC
+;
+
+#TASK_13 Which actor has appeared in the most films?
+SELECT a.first_name, a.last_name, COUNT(fa.actor_id) AS Most_Films
+FROM actor a
+JOIN film_actor fa
+ON a.actor_id = fa.actor_id
+GROUP BY fa.actor_id
+ORDER BY Most_films DESC
+LIMIT 1
+;
+
+#TASK 14 When is 'Academy Dinosaur' due? - not quite
+SELECT *
+FROM rental;
+
+SELECT f.title, max(r.return_date) as Recent_Return_Date
+FROM rental r
+JOIN inventory i
+ON i.inventory_id = r.inventory_id
+JOIN film f
+ON f.film_id=i.film_id
+WHERE f.title = "Academy Dinosaur" 
+;
+
+#TASK 15 What is the average runtime of all films?
+SELECT avg(length)
+FROM film
+;
+
+#TASK 16 List the average runtime for every film category.
+
+
+#TASK 17 List all movies featuring a robot.
+
+
+#TASK 18 How many movies were released in 2010?
+
